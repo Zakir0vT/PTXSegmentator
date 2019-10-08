@@ -12,7 +12,9 @@ namespace PTXSegmentator
             var stopWatch = new Stopwatch();
             var provider = prog.CreateContainer();
             var pointsNumb = provider.GetService<GetPointsNumb>();
-            
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(provider.GetService<JustForFun>().Abu);
             Console.WriteLine("Enter PTX name:");
             pointsNumb.FilePath = Console.ReadLine();
             stopWatch.Start();
@@ -40,6 +42,8 @@ namespace PTXSegmentator
             serviceCollection.AddSingleton<GetPointsNumb>();
             serviceCollection.AddSingleton<MatrixGridDto>();
             serviceCollection.AddSingleton<PointsWriter>();
+            serviceCollection.AddSingleton<ProgressBar>();
+            serviceCollection.AddSingleton<JustForFun>();
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             return serviceProvider;
