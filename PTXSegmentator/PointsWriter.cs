@@ -6,6 +6,7 @@ namespace PTXSegmentator
     public class PointsWriter : PointsReader
     {
         private readonly MatrixGridDto _matrixGridDto;
+        private readonly ProgressBar _progressBar;
         public sealed override string FilePath { get; set; }
         public override string Line { get; set; }
         public override string[] PointsInLine { get; set; }
@@ -22,9 +23,10 @@ namespace PTXSegmentator
         private int _increment;
         private StreamWriter _streamWriter;
 
-        public PointsWriter(MatrixGridDto matrixGridDto, GetPointsNumb pointsNumb)
+        public PointsWriter(MatrixGridDto matrixGridDto, GetPointsNumb pointsNumb, ProgressBar progressBar)
         {
             _matrixGridDto = matrixGridDto;
+            _progressBar = progressBar;
             FilePath = pointsNumb.FilePath ?? throw new ArgumentNullException();
         }
 
@@ -49,7 +51,7 @@ namespace PTXSegmentator
                 _streamWriter?.WriteLine(Line);
             };
 
-            Read(RuleForWrite);
+            Read(RuleForWrite, _progressBar.ProgressBarWriter);
             _streamWriter.Flush();
             _streamWriter.Close();
         }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 
 namespace PTXSegmentator
 {
     public class GetPointsNumb : PointsReader
     {
         private readonly MatrixGridDto _matrixGridDto;
+        private readonly ProgressBar _progressBar;
         public override string Line { get; set; }
         public override string[] PointsInLine { get; set; }
 
@@ -12,16 +14,16 @@ namespace PTXSegmentator
         public override string FilePath
         {
             get => _filePath;
-            set =>
-                _filePath = string.IsNullOrEmpty(value)
-                    ? throw new ArgumentNullException($"File name can`t be empty")
-                    : value;
+            set => _filePath = string.IsNullOrEmpty(value)
+                ? throw new ArgumentNullException($"File name can`t be empty")
+                : value;
         }
 
 
-        public GetPointsNumb(MatrixGridDto matrixGridDto)
+        public GetPointsNumb(MatrixGridDto matrixGridDto, ProgressBar progressBar)
         {
             _matrixGridDto = matrixGridDto;
+            _progressBar = progressBar;
         }
 
         public void CreateMatrixGrid()
@@ -34,7 +36,9 @@ namespace PTXSegmentator
                 }
             };
 
-            Read(validationRule);
+            _progressBar.FileLength = new FileInfo(FilePath + ".ptx").Length;
+
+            Read(validationRule, _progressBar.ProgressBarWriter);
         }
     }
 }
